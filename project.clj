@@ -6,7 +6,7 @@
   :repositories {"libs-release"  {:url "http://artifactory.oscaroad.com/artifactory/libs-release"}
                  "libs-snapshot" {:url "http://artifactory.oscaroad.com/artifactory/libs-snapshot"}}
   :dependencies [[org.clojure/clojure "1.9.0-beta4"]
-                 [com.oscaro/clj-gcloud-common "0.2.0"]
+                 [com.oscaro/clj-gcloud-common "0.2.1"]
                  [com.google.cloud/google-cloud-storage "1.12.0"]
                  [org.clojure/tools.logging "0.4.0"]]
   :global-vars {*warn-on-reflection* true}

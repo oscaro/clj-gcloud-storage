@@ -1,7 +1,7 @@
 (ns com.oscaro.clj-gcloud.storage
   (:require [com.oscaro.clj-gcloud
              [coerce :refer :all]
-             [common :refer [build-service]]]
+             [common :refer [build-service array-type]]]
             [clojure.tools.logging :as log]
             [clojure.java.io :as io])
   (:import (com.google.cloud.storage BucketInfo Blob BlobId BlobInfo BucketInfo$Builder Storage StorageOptions
@@ -18,17 +18,6 @@
 (create-clj-coerce BlobId [:bucket :name])
 (create-clj-coerce BlobInfo [:blob-id :cache-control :create-time :update-time :delete-time
                              :content-disposition :content-encoding :content-language :content-type])
-
-(defn- array-type
-  "Return a string representing the type of an array with dims
-  dimensions and an element of type.
-  For primitives, use a type like Integer/TYPE
-  Useful for type hints of the form: ^#=(array-type String) my-str-array"
-  ([type]
-   (array-type type 1))
-  ([type dims]
-   (let [type (if (symbol? type) (eval type) type)]
-     (-> (apply make-array type (repeat dims 0)) class .getName))))
 
 (defn bucket-info
   ^BucketInfo
