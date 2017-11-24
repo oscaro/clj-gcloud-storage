@@ -44,9 +44,9 @@
 (deftest copy-dump-to-storage-test
 
   (testing "It should copy a file to storage matching a certain path"
-    (let [tmp      (create-temp-file ".json")
-          dest-uri (str "gs://" bucket "/tmp.json")
-          data     "{\"test\":\"data\"}"]
+    (let [^File tmp (create-temp-file ".json")
+          dest-uri  (str "gs://" bucket "/tmp.json")
+          data      "{\"test\":\"data\"}"]
       (spit tmp data)
       (copy-file-to-storage *storage* tmp dest-uri)
       (let [[^Blob blob] (ls *storage* dest-uri)]
