@@ -4,8 +4,9 @@
             [com.oscaro.clj-gcloud.storage :refer :all]
             [clojure.tools.logging :as log])
   (:import (java.util.concurrent TimeUnit)
-           (com.google.cloud.storage Storage)
-           (com.google.cloud.storage.testing RemoteStorageHelper)))
+           (com.google.cloud.storage Storage Blob)
+           (com.google.cloud.storage.testing RemoteStorageHelper)
+           (java.io File)))
 
 ; Constants
 (def ^String bucket (RemoteStorageHelper/generateBucketName))
@@ -23,6 +24,11 @@
       (when (not (RemoteStorageHelper/forceDelete *storage* bucket 5 TimeUnit/SECONDS))
         (log/warn "Deletion of bucket" bucket "timed out, bucket is not empty")))))
 
+(defn- create-temp-file [suffix]
+  (let [file (File/createTempFile "tmp" suffix)]
+    (.deleteOnExit file)
+    file))
+
 (use-fixtures
   :once
   (fn [f]
@@ -34,3 +40,16 @@
 
 (deftest bucket-is-initialized
   (is (not (nil? (get-bucket *storage* bucket)))))
+
+(deftest copy-dump-to-storage-test
+
+  (testing "It should copy a file to storage matching a certain path"
+    (let [tmp      (create-temp-file ".json")
+          dest-uri (str "gs://" bucket "/tmp.json")
+          data     "{\"test\":\"data\"}"]
+      (spit tmp data)
+      (copy-file-to-storage *storage* tmp dest-uri)
+      (let [[^Blob blob] (ls *storage* dest-uri)]
+        (is (= (count data) (.getSize blob)))
+        (is (delete-blob *storage* (.getBlobId blob))))
+      (.delete tmp))))

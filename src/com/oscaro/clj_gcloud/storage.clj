@@ -10,8 +10,9 @@
                                      Storage$BlobTargetOption BlobWriteChannel Storage$BlobWriteOption
                                      Blob$BlobSourceOption BlobReadChannel Storage$BlobListOption CopyWriter)
            (com.google.api.gax.paging Page)
-           (java.nio.channels ReadableByteChannel Channels WritableByteChannel)
-           (java.io InputStream OutputStream)))
+           (java.nio.channels Channels ReadableByteChannel WritableByteChannel)
+           (java.io InputStream OutputStream FileInputStream File)
+           (com.google.common.io ByteStreams)))
 
 (create-clj-coerce BucketInfo [:name :location :storage-class])
 (create-clj-coerce Blob [:name :content-type])
@@ -199,3 +200,21 @@
   "Writes an local file to stream"
   [local-path ^OutputStream output-stream]
   (io/copy (io/file local-path) output-stream))
+
+;;
+;; Convenience functions
+;;
+
+(defn copy-file-to-storage
+  "Convenience function for copying a local file to a blob to storage.
+  By default the type is JSON encoded in UTF-8"
+  ([storage src dest-uri]
+   (copy-file-to-storage storage src dest-uri
+                         :content-type "application/json"
+                         :content-encoding "UTF8"))
+  ([^Storage storage ^File src dest-gs-uri & options]
+   (let [opts (apply array-map options)
+         info (-> dest-gs-uri ->blob-id (blob-info opts))]
+     (with-open [from (.getChannel (FileInputStream. src))
+                 to   (create-blob-writer storage info)]
+       (ByteStreams/copy from to)))))
