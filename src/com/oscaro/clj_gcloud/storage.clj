@@ -161,8 +161,8 @@
 
 (defn ls
   ([^Storage storage gs-uri]
-   (let [{:keys [bucket path]} (->clj (read-gs-uri gs-uri))]
-     (ls storage bucket path)))
+   (let [{:keys [bucket name]} (->clj (read-gs-uri gs-uri))]
+     (ls storage bucket name)))
   ([^Storage storage bucket path]
    (let [options (if (clojure.string/blank? path) {} {:prefix path})]
      (page->seq (list-blobs storage bucket options)))))
