@@ -15,7 +15,7 @@
            (com.google.common.io ByteStreams)))
 
 (create-clj-coerce BucketInfo [:name :location :storage-class])
-(create-clj-coerce Blob [:name :content-type])
+(create-clj-coerce Blob [:blob-id :name :content-type])
 (create-clj-coerce BlobId [:bucket :name])
 (create-clj-coerce BlobInfo [:blob-id :cache-control :create-time :update-time :delete-time
                              :content-disposition :content-encoding :content-language :content-type])
@@ -159,13 +159,28 @@
   [^Storage storage ^String bucket-name options]
   (.list storage bucket-name (->blob-list-options options)))
 
+(defn- split-bucket-path
+  [gs-uri]
+  (let [{:keys [bucket name]} (->clj (read-gs-uri gs-uri))]
+    [bucket name]))
+
 (defn ls
+  "Usage:
+     (ls storage gs-uri [options])
+     (ls storage bucket path [options])"
   ([^Storage storage gs-uri]
-   (let [{:keys [bucket name]} (->clj (read-gs-uri gs-uri))]
-     (ls storage bucket name)))
+   (let [[bucket path] (split-bucket-path gs-uri)]
+     (ls storage bucket path)))
   ([^Storage storage bucket path]
-   (let [options (if (clojure.string/blank? path) {} {:prefix path})]
-     (page->seq (list-blobs storage bucket options)))))
+   (if (map? path)
+     (let [options path
+           [bucket path] (split-bucket-path bucket)]
+       (ls storage bucket path options))
+     (ls storage bucket path {})))
+  ([^Storage storage bucket path options]
+   (page->seq (list-blobs storage bucket (merge options
+                                                (if (clojure.string/blank? path)
+                                                  {} {:prefix path}))))))
 
 ;;
 ;; Utility IO functions
@@ -211,7 +226,7 @@
   ([storage src dest-uri]
    (copy-file-to-storage storage src dest-uri
                          :content-type "application/json"
-                         :content-encoding "UTF8"))
+                         :content-encoding "UTF-8"))
   ([^Storage storage ^File src dest-gs-uri & options]
    (let [opts (apply array-map options)
          info (-> dest-gs-uri ->blob-id (blob-info opts))]
