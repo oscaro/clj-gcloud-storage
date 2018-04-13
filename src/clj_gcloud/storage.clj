@@ -1,5 +1,5 @@
-(ns com.oscaro.clj-gcloud.storage
-  (:require [com.oscaro.clj-gcloud
+(ns clj-gcloud.storage
+  (:require [clj-gcloud
              [coerce :refer :all]
              [common :refer [build-service array-type]]]
             [clojure.tools.logging :as log]
