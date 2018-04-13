@@ -1,8 +1,7 @@
-(ns com.oscaro.clj-gcloud.storage-test
+(ns clj-gcloud.storage-test
   (:require [clojure.test :refer :all]
-            [clojure.edn :as edn]
-            [com.oscaro.clj-gcloud.storage :refer :all]
-            [com.oscaro.clj-gcloud.coerce :refer [->clj]]
+            [clj-gcloud.storage :refer :all]
+            [clj-gcloud.coerce :refer [->clj]]
             [clojure.java.io :as io])
   (:import (com.google.cloud.storage Storage Blob)
            (com.google.cloud.storage.testing RemoteStorageHelper)

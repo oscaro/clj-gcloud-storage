@@ -6,9 +6,9 @@
             [clojure.repl :refer  (apropos dir doc find-doc pst source)]
             [clojure.java.io :as io]
             [clojure.string :as str]
-            [com.oscaro.clj-gcloud [coerce :refer [->clj page->seq accessor->name]]
+            [clj-gcloud [coerce :refer [->clj page->seq accessor->name]]
                                    [common :refer [invoke-method]]]
-            [com.oscaro.clj-gcloud.storage :as gs]))
+            [clj-gcloud.storage :as gs]))
 
 (def st nil)
 
