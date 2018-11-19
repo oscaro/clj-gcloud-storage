@@ -5,14 +5,14 @@
             [clojure.tools.logging :as log]
             [clojure.java.io :as io])
   (:import (com.google.cloud.storage BucketInfo Blob BlobId BlobInfo BucketInfo$Builder Storage StorageOptions
-                                     Storage$BucketGetOption Bucket Storage$BucketTargetOption
+                                     Storage$BucketGetOption Storage$BucketTargetOption
                                      Storage$BucketSourceOption BlobInfo$Builder Storage$CopyRequest
-                                     Storage$BlobTargetOption BlobWriteChannel Storage$BlobWriteOption
-                                     Blob$BlobSourceOption BlobReadChannel Storage$BlobListOption CopyWriter)
-           (com.google.api.gax.paging Page)
+                                     Storage$BlobTargetOption Storage$BlobWriteOption
+                                     Blob$BlobSourceOption Storage$BlobListOption CopyWriter)
            (java.nio.channels Channels ReadableByteChannel WritableByteChannel)
            (java.io InputStream OutputStream FileInputStream File)
-           (com.google.common.io ByteStreams)))
+           (com.google.common.io ByteStreams)
+           (com.google.cloud WriteChannel)))
 
 (create-clj-coerce BucketInfo [:name :location :storage-class])
 (create-clj-coerce Blob [:blob-id :name :content-type])
@@ -21,7 +21,6 @@
                              :content-disposition :content-encoding :content-language :content-type])
 
 (defn bucket-info
-  ^BucketInfo
   [bucket-name options]
   (let [opt-map {:index-page         (fn [^BucketInfo$Builder b v] (.setIndexPage b v))
                  :location           (fn [^BucketInfo$Builder b v] (.setLocation b v))
@@ -35,28 +34,24 @@
       (set-fn builder v))
     (.build builder)))
 
-(defn init
-  ^Storage
+(defn ^Storage init
   [options]
   (let [builder (StorageOptions/newBuilder)]
     (build-service builder options)))
 
 ;; BUCKETS
 (defn get-bucket
-  ^BucketInfo
   [^Storage storage ^String bucket-name]
   (let [^#=(array-type Storage$BucketGetOption) no-options (into-array Storage$BucketGetOption [])]
     (.get storage bucket-name no-options)))
 
 (defn create-bucket
-  ^Bucket
   [^Storage storage ^BucketInfo bucket-info]
   (let [^#=(array-type Storage$BucketTargetOption) no-options (into-array Storage$BucketTargetOption [])]
     (.create storage bucket-info no-options)))
 
 (defn get-or-create-bucket
   "Fetches or creates a bucket if it doesn't exist"
-  ^Bucket
   [^Storage storage ^BucketInfo info]
   (let [bucket-name (.getName info)
         bucket      (get-bucket storage bucket-name)]
@@ -66,7 +61,6 @@
           (create-bucket storage info)))))
 
 (defn delete-bucket
-  ^Boolean
   [^Storage storage ^String bucket-name]
   (let [^#=(array-type Storage$BucketSourceOption) no-opts (into-array Storage$BucketSourceOption [])]
     (.delete storage bucket-name no-opts)))
@@ -75,7 +69,6 @@
 (declare ->blob-id)
 
 (defn read-gs-uri
-  ^BlobId
   [gs-uri]
   (let [[scheme host path] (clojure.string/split gs-uri #"[/]+" 3)]
     (if (= "gs:" scheme)
@@ -83,7 +76,6 @@
       (throw (ex-info "Invalid scheme" {:input gs-uri})))))
 
 (defn ->blob-id
-  ^BlobId
   ([bucket name]
    (BlobId/of bucket name))
   ([gs-uri-or-blob-id]
@@ -92,7 +84,6 @@
      (read-gs-uri gs-uri-or-blob-id))))
 
 (defn blob-info
-  ^BlobInfo
   [blob-id options]
   (let [opt-map {:cache-control       (fn [^BlobInfo$Builder b v] (.setCacheControl b v))
                  :content-disposition (fn [^BlobInfo$Builder b v] (.setContentDisposition b v))
@@ -107,35 +98,29 @@
     (.build builder)))
 
 (defn copy
-  ^BlobInfo
   [^Storage storage ^BlobId source-blob-id ^BlobId target-blob-id]
   (-> (.copy storage (Storage$CopyRequest/of source-blob-id target-blob-id))
       (.getResult)))
 
 (defn create-blob
-  ^Blob
   [^Storage storage ^BlobInfo blob-info]
   (let [^#=(array-type Storage$BlobTargetOption) no-options (into-array Storage$BlobTargetOption [])]
     (.create storage blob-info no-options)))
 
-(defn create-blob-writer
-  ^BlobWriteChannel
+(defn ^WriteChannel create-blob-writer
   [^Storage storage ^BlobInfo blob-info]
   (let [^#=(array-type Storage$BlobWriteOption) no-opts (into-array Storage$BlobWriteOption [])]
     (.writer storage blob-info no-opts)))
 
 (defn get-blob
-  ^Blob
   ([^Storage storage ^BlobId blob-id]
    (.get storage blob-id)))
 
 (defn delete-blob
-  ^java.lang.Boolean
   ([^Storage storage ^BlobId blob-id]
    (.delete storage blob-id)))
 
 (defn copy-blob
-  ^Blob
   ([^Blob source-blob ^BlobId target-blob-id]
    (let [^#=(array-type Blob$BlobSourceOption) no-opts (into-array Blob$BlobSourceOption [])
          ^CopyWriter writer                            (.copyTo source-blob target-blob-id no-opts)]
@@ -155,7 +140,6 @@
          (into-array Storage$BlobListOption))))
 
 (defn list-blobs
-  ^Page
   [^Storage storage ^String bucket-name options]
   (.list storage bucket-name (->blob-list-options options)))
 
@@ -187,22 +171,18 @@
 ;;
 
 (defn read-channel
-  ^BlobReadChannel
   [^Blob blob]
   (.reader blob (into-array Blob$BlobSourceOption [])))
 
 (defn write-channel
-  ^BlobWriteChannel
   [^Blob blob]
   (.writer blob (into-array Storage$BlobWriteOption [])))
 
 (defn ->input-stream
-  ^InputStream
   [^ReadableByteChannel channel]
   (Channels/newInputStream channel))
 
 (defn ->output-stream
-  ^OutputStream
   [^WritableByteChannel channel]
   (Channels/newOutputStream channel))
 
