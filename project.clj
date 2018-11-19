@@ -1,4 +1,4 @@
-(defproject com.oscaro/clj-gcloud-storage "1.53-0.0-SNAPSHOT"
+(defproject com.oscaro/clj-gcloud-storage "0.71-1.0-SNAPSHOT"
   :description "Clojure wrapper for google-cloud-storage Java client"
   :url "http://gitlab.oscaroad.com"
   :license {:name "Eclipse Public License"
@@ -6,7 +6,7 @@
   :repositories {"libs-release"  {:url "http://artifactory.oscaroad.com/artifactory/libs-release"}
                  "libs-snapshot" {:url "http://artifactory.oscaroad.com/artifactory/libs-snapshot"}}
   :dependencies [[org.clojure/clojure "1.9.0"]
-                 [com.oscaro/clj-gcloud-common "1.53-0.0-SNAPSHOT"]
+                 [com.oscaro/clj-gcloud-common "0.71-1.0-SNAPSHOT"]
                  [com.google.cloud/google-cloud-storage "1.53.0"]
                  [org.clojure/tools.logging "0.4.0"]]
   :global-vars {*warn-on-reflection* true}
