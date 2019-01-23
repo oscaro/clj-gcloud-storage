@@ -10,6 +10,7 @@
                                      Storage$BlobTargetOption Storage$BlobWriteOption
                                      Blob$BlobSourceOption Storage$BlobListOption CopyWriter)
            (java.nio.channels Channels ReadableByteChannel WritableByteChannel)
+           (java.nio.file Path Paths)
            (java.io InputStream OutputStream FileInputStream File)
            (com.google.common.io ByteStreams)
            (com.google.cloud WriteChannel)))
@@ -213,3 +214,15 @@
      (with-open [from (.getChannel (FileInputStream. src))
                  to   (create-blob-writer storage info)]
        (ByteStreams/copy from to)))))
+
+;; Blob source option : if required add them
+(defn download-file-from-storage
+  "Downloads a storage file to a local one.
+   Usage :
+   (download-file-from-storage storage-client 'gs://mybucket/myfolder/.../myfile' 'mylocalfile')"
+  [^Storage storage source-gs-uri dest-local-path & options]
+  (let [blob (->> source-gs-uri ->blob-id (get-blob storage))]
+    (.downloadTo blob (Paths/get dest-local-path (make-array String 0)) (into-array Blob$BlobSourceOption []))))
+
+
+
