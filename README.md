@@ -1,6 +1,6 @@
 # clj-gcloud-storage
 
-Clojure wrapper for [google-cloud-storage] Java client
+Clojure wrapper for [google-cloud-storage][] Java client.
 
 ## Usage
 
