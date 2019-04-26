@@ -2,7 +2,7 @@
   :description "Clojure wrapper for google-cloud-storage Java client"
   :url "https://github.com/oscaro/clj-gcloud-storage"
   :license {:name "Eclipse Public License"
-            :url  "http://www.eclipse.org/legal/epl-v10.html"}
+            :url  "https://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.9.0"]
                  [com.oscaro/clj-gcloud-common "0.71-1.0"]
                  [com.google.cloud/google-cloud-storage "1.53.0"]
