@@ -4,6 +4,10 @@ Clojure wrapper for [google-cloud-storage][] Java client.
 
 ## Usage
 
+```clojure
+[com.oscaro/clj-gcloud-storage "0.71-1.2"]
+```
+
 ### Initializing a client
 
 As any other Google cloud service, Storage requires the user to be authentified.
