@@ -125,4 +125,4 @@ Copyright © 2017-2019 Oscaro
 Distributed under the Eclipse Public License either version 1.0 or (at
 your option) any later version.
 
-[google-cloud-storage]: https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-storage
+[google-cloud-storage]: https://github.com/googleapis/java-storage
