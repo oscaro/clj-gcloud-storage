@@ -120,7 +120,7 @@ the result to uris.
 
 ## License
 
-Copyright © 2017-2019 Oscaro
+Copyright © 2017-2020 Oscaro
 
 Distributed under the Eclipse Public License either version 1.0 or (at
 your option) any later version.
