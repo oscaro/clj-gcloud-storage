@@ -8,9 +8,7 @@
                                       :password :env/clojars_password
                                       :sign-releases false}]
                         ["releases"  {:url "https://repo.clojars.org"
-                                      :username :env/clojars_username
-                                      :password :env/clojars_password
-                                      :sign-releases false}]]
+                                      :creds :gpg}]]
   :dependencies [[org.clojure/clojure "1.10.1" :scope "provided"]
                  [com.oscaro/clj-gcloud-common "0.112-1.0"]
                  [com.google.cloud/google-cloud-storage "1.100.0"]
