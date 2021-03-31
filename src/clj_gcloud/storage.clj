@@ -1,19 +1,20 @@
 (ns clj-gcloud.storage
   (:require [clj-gcloud
-             [coerce :refer :all]
+             [coerce :refer [create-clj-coerce ->clj page->seq]]
              [common :refer [build-service array-type]]]
-            [clojure.tools.logging :as log]
-            [clojure.java.io :as io])
+            [clojure.java.io :as io]
+            [clojure.string :as str]
+            [clojure.tools.logging :as log])
   (:import (com.google.cloud.storage BucketInfo Blob BlobId BlobInfo BucketInfo$Builder Storage StorageOptions
                                      Storage$BucketGetOption Storage$BucketTargetOption
                                      Storage$BucketSourceOption BlobInfo$Builder Storage$CopyRequest
                                      Storage$BlobTargetOption Storage$BlobWriteOption
                                      Blob$BlobSourceOption Storage$BlobListOption CopyWriter)
            (java.nio.channels Channels ReadableByteChannel WritableByteChannel)
-           (java.nio.file Path Paths)
+           (java.nio.file Paths)
            (java.io InputStream OutputStream FileInputStream File)
-           (com.google.common.io ByteStreams)
-           (com.google.cloud WriteChannel)))
+           (com.google.cloud WriteChannel)
+           (com.google.common.io ByteStreams)))
 
 (create-clj-coerce BucketInfo [:name :location :storage-class])
 (create-clj-coerce Blob [:blob-id :name :content-type])
@@ -71,7 +72,7 @@
 
 (defn read-gs-uri
   [gs-uri]
-  (let [[scheme host path] (clojure.string/split gs-uri #"[/]+" 3)]
+  (let [[scheme host path] (str/split gs-uri #"[/]+" 3)]
     (if (= "gs:" scheme)
       (->blob-id host path)
       (throw (ex-info "Invalid scheme" {:input gs-uri})))))
@@ -220,7 +221,7 @@
   "Downloads a storage file to a local one.
    Usage :
    (download-file-from-storage storage-client 'gs://mybucket/myfolder/.../myfile' 'mylocalfile')"
-  [^Storage storage source-gs-uri dest-local-path & options]
+  [^Storage storage source-gs-uri dest-local-path & _options]
   (let [blob (->> source-gs-uri ->blob-id (get-blob storage))]
     (.downloadTo blob (Paths/get dest-local-path (make-array String 0)) (into-array Blob$BlobSourceOption []))))
 

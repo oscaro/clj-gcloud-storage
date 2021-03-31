@@ -1,11 +1,11 @@
 (ns clj-gcloud.storage-test
-  (:require [clojure.test :refer :all]
-            [clj-gcloud.storage :refer :all]
+  (:require [clj-gcloud.storage :refer [copy-file-to-storage read-channel ->input-stream delete-blob ls]]
             [clj-gcloud.coerce :refer [->clj]]
-            [clojure.java.io :as io])
+            [clojure.java.io :as io]
+            [clojure.test :refer [deftest is use-fixtures testing]])
   (:import (com.google.cloud.storage Storage Blob)
-           (com.google.cloud.storage.testing RemoteStorageHelper)
            (com.google.cloud.storage.contrib.nio.testing LocalStorageHelper)
+           (com.google.cloud.storage.testing RemoteStorageHelper)
            (java.io File)))
 
 ;; Constants
