@@ -1,11 +1,15 @@
 # clj-gcloud-storage
 
-Clojure wrapper for [google-cloud-storage][] Java client.
+[![Clojars Project](https://img.shields.io/clojars/v/com.oscaro/clj-gcloud-storage.svg)](https://clojars.org/com.oscaro/clj-gcloud-storage)
+
+[![cljdoc badge](https://cljdoc.org/badge/com.oscaro/clj-gcloud-storage)](https://cljdoc.org/d/com.oscaro/clj-gcloud-storage/CURRENT)
+
+Clojure wrapper for [google-cloud-storage] Java client.
 
 ## Usage
 
 ```clojure
-[com.oscaro/clj-gcloud-storage "0.71-1.2"]
+[com.oscaro/clj-gcloud-storage "0.112-1.0"]
 ```
 
 ### Initializing a client
@@ -120,7 +124,7 @@ the result to uris.
 
 ## License
 
-Copyright © 2017-2020 Oscaro
+Copyright © 2017-2021 Oscaro
 
 Distributed under the Eclipse Public License either version 1.0 or (at
 your option) any later version.
