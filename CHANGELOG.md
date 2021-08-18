@@ -1,6 +1,6 @@
 # clj-gcloud-storage Changelog
 
-## [Unreleased]
+## [0.159-1.0] - 2021-08-18
 
 * Bumped dependencies
 
