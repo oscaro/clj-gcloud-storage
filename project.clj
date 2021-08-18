@@ -12,23 +12,21 @@
   :managed-dependencies
   ;; Google “Bill of Materials” (BOM) defines a combination of
   ;; dependency versions that work well with each other.
-  [[com.google.cloud/google-cloud-bom "0.150.0"
+  [[com.google.cloud/google-cloud-bom "0.159.0"
     :extension "pom"
     :scope "import"]
-   [com.google.cloud/google-cloud-shared-dependencies "0.20.1"
+   [com.google.cloud/google-cloud-shared-dependencies "2.0.1"
     :extension "pom"
     :scope "import"]
-   [io.grpc/grpc-api "1.36.0"]
    ;; Select non-android Guava to work around Guava versioning mess
    ;; <https://github.com/google/guava/issues/2914>.
-   [com.google.guava/guava "30.1-jre"]]
+   [com.google.guava/guava "30.1.1-jre"]]
   :dependencies [[org.clojure/clojure "1.10.3"]
-                 [com.oscaro/clj-gcloud-common "0.150-1.0"]
-                 [com.google.cloud/google-cloud-storage "1.113.14"]
-                 [io.grpc/grpc-api]
+                 [com.oscaro/clj-gcloud-common "0.159-1.0"]
+                 [com.google.cloud/google-cloud-storage "2.0.1"]
                  [org.clojure/tools.logging "1.1.0"]]
   :global-vars {*warn-on-reflection* true}
   :profiles {:dev {:source-paths ["dev"]
                    :dependencies [[org.clojure/tools.namespace "1.1.0"]
-                                  [com.google.cloud/google-cloud-nio "0.122.11"]]}}
+                                  [com.google.cloud/google-cloud-nio "0.123.6"]]}}
   :repl-options {:init-ns user})
