@@ -9,7 +9,7 @@ Clojure wrapper for [google-cloud-storage] Java client.
 ## Usage
 
 ```clojure
-[com.oscaro/clj-gcloud-storage "0.159-1.0"]
+[com.oscaro/clj-gcloud-storage "0.164-1.0"]
 ```
 
 ### Initializing a client
