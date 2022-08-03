@@ -17,7 +17,9 @@
            (com.google.common.io ByteStreams)))
 
 (create-clj-coerce BucketInfo [:name :location :storage-class])
-(create-clj-coerce Blob [:blob-id :name :content-type])
+(create-clj-coerce Blob [:blob-id :name :content-type
+                         :cache-control :create-time :update-time :delete-time
+                         :content-disposition :content-encoding :content-language])
 (create-clj-coerce BlobId [:bucket :name])
 (create-clj-coerce BlobInfo [:blob-id :cache-control :create-time :update-time :delete-time
                              :content-disposition :content-encoding :content-language :content-type])
@@ -37,9 +39,11 @@
     (.build builder)))
 
 (defn ^Storage init
-  [options]
-  (let [builder (StorageOptions/newBuilder)]
-    (build-service builder options)))
+  ([]
+   (init {}))
+  ([options]
+   (let [builder (StorageOptions/newBuilder)]
+     (build-service builder options))))
 
 ;; BUCKETS
 (defn get-bucket
