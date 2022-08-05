@@ -32,10 +32,23 @@
       (spit tmp data)
       (copy-file-to-storage *storage* tmp dest-uri)
       (let [^Blob blob (first (ls *storage* dest-uri))]
-        (is (= {:blob-id      {:bucket bucket :name "tmp.json"}
-                :content-type "application/json"
-                :name         "tmp.json"}
-               (->clj blob)))
+        (let [coerced-blob (->clj blob)]
+          (is (= {:blob-id      {:bucket bucket :name "tmp.json"}
+                  :content-type "application/json"
+                  :name         "tmp.json"
+                  :content-encoding "UTF-8"}
+                 (select-keys coerced-blob [:blob-id :content-type :name :content-encoding])))
+          (is (= #{:content-language
+                   :content-disposition
+                   :name
+                   :update-time
+                   :blob-id
+                   :cache-control
+                   :create-time
+                   :content-type
+                   :content-encoding
+                   :delete-time}
+                 (set (keys coerced-blob)))))
         (is (= data (-> (read-channel blob)
                         (->input-stream)
                         (io/reader)
