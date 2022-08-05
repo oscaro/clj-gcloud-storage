@@ -22,6 +22,8 @@ There are several ways to authenticate, two major ones :
 ```clojure
 ;; Local credentials, require them to have been created on your side
 ;; Default project will be used
+(def client (st/init))
+;; or equivalent
 (def client (st/init {}))
 
 ;; Service account usage for portable applications
