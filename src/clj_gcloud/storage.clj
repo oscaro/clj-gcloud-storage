@@ -38,7 +38,8 @@
       (set-fn builder v))
     (.build builder)))
 
-(defn ^Storage init
+(defn init
+  ^Storage
   ([]
    (init {}))
   ([options]
@@ -113,7 +114,8 @@
   (let [^#=(array-type Storage$BlobTargetOption) no-options (into-array Storage$BlobTargetOption [])]
     (.create storage blob-info no-options)))
 
-(defn ^WriteChannel create-blob-writer
+(defn create-blob-writer
+  ^WriteChannel
   [^Storage storage ^BlobInfo blob-info]
   (let [^#=(array-type Storage$BlobWriteOption) no-opts (into-array Storage$BlobWriteOption [])]
     (.writer storage blob-info no-opts)))
@@ -228,6 +230,3 @@
   [^Storage storage source-gs-uri dest-local-path & _options]
   (let [blob (->> source-gs-uri ->blob-id (get-blob storage))]
     (.downloadTo blob (Paths/get dest-local-path (make-array String 0)) (into-array Blob$BlobSourceOption []))))
-
-
-

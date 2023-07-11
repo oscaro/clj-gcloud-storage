@@ -1,12 +1,14 @@
 (ns clj-gcloud.storage-test
-  (:require [clj-gcloud.storage :refer [copy-file-to-storage read-channel ->input-stream delete-blob ls]]
-            [clj-gcloud.coerce :refer [->clj]]
-            [clojure.java.io :as io]
-            [clojure.test :refer [deftest is use-fixtures testing]])
-  (:import (com.google.cloud.storage Storage Blob)
-           (com.google.cloud.storage.contrib.nio.testing LocalStorageHelper)
-           (com.google.cloud.storage.testing RemoteStorageHelper)
-           (java.io File)))
+  (:require
+   [clj-gcloud.coerce :refer [->clj]]
+   [clj-gcloud.storage :refer [copy-file-to-storage read-channel ->input-stream delete-blob ls]]
+   [clojure.java.io :as io]
+   [clojure.test :refer [deftest is use-fixtures testing]])
+  (:import
+   (com.google.cloud.storage Storage Blob)
+   (com.google.cloud.storage.contrib.nio.testing LocalStorageHelper)
+   (com.google.cloud.storage.testing RemoteStorageHelper)
+   (java.io File)))
 
 ;; Constants
 (def ^String bucket (RemoteStorageHelper/generateBucketName))
