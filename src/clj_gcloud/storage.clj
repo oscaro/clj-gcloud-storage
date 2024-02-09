@@ -137,6 +137,7 @@
 (defn ->blob-list-options
   [options]
   (let [opt-map {:current-directory (fn [_] (Storage$BlobListOption/currentDirectory))
+                 :match-glob        (fn [v] (Storage$BlobListOption/matchGlob v))
                  :page-size         (fn [v] (Storage$BlobListOption/pageSize (long v)))
                  :page-token        (fn [v] (Storage$BlobListOption/pageToken v))
                  :prefix            (fn [v] (Storage$BlobListOption/prefix v))
