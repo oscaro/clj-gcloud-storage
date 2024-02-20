@@ -28,6 +28,8 @@
                  [com.google.cloud/google-cloud-nio "0.127.14"]
                  [com.google.cloud/google-cloud-storage "2.35.0"]
                  [org.clojure/tools.logging "1.3.0"]]
+  :plugins [[io.github.borkdude/lein-lein2deps "0.1.0"]]
+  :prep-tasks [["lein2deps" "--write-file" "deps.edn" "--print" "false"]]
   :profiles {:dev {:source-paths ["dev"]
                    :dependencies [[org.clojure/tools.namespace "1.5.0"]]
                    :global-vars {*warn-on-reflection* true}}}
