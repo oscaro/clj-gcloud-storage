@@ -208,6 +208,20 @@
 ;; Convenience functions
 ;;
 
+(defn copy-with-generation-preconditions
+  "Copy blobs within cloud storage using preconditions recommended in Google Cloud Storage guides
+  See: https://cloud.google.com/storage/docs/copying-renaming-moving-objects#storage-copy-object-java"
+  [^Storage storage ^BlobId source-blob-id ^BlobId target-blob-id]
+  (let [precondition (if-let [target (.get storage target-blob-id)]
+                       (Storage$BlobTargetOption/generationMatch (.getGeneration target))
+                       (Storage$BlobTargetOption/doesNotExist))
+        builder (-> (Storage$CopyRequest/newBuilder)
+                    (.setSource source-blob-id)
+                    (.setTarget target-blob-id (into-array Storage$BlobTargetOption [precondition]))
+                    .build)]
+    (-> (.copy storage builder)
+        (.getResult))))
+
 (defn copy-file-to-storage
   "Convenience function for copying a local file to a blob to storage.
   By default the type is JSON encoded in UTF-8"
