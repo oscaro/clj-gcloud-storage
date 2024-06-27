@@ -14,21 +14,21 @@
   ;; dependency versions that work well with each other.
   ;;
   ;; based on versions from
-  ;;   https://mvnrepository.com/artifact/com.google.cloud/google-cloud-bom/0.209.0
+  ;;   https://mvnrepository.com/artifact/com.google.cloud/google-cloud-bom/0.215.0
   ;; which corresponds to
-  ;;   https://mvnrepository.com/artifact/com.google.cloud/libraries-bom/26.28.0
-  [[com.google.cloud/google-cloud-bom "0.209.0"
+  ;;   https://mvnrepository.com/artifact/com.google.cloud/libraries-bom/26.34.0
+  [[com.google.cloud/google-cloud-bom "0.215.0"
     :extension "pom"
     :scope "import"]
-   [com.google.cloud/google-cloud-shared-dependencies "3.20.0"
+   [com.google.cloud/google-cloud-shared-dependencies "3.27.0"
     :extension "pom"
     :scope "import"]]
-  :dependencies [[org.clojure/clojure "1.11.1"]
-                 [com.oscaro/clj-gcloud-common "0.209-1.0"]
-                 [com.google.cloud/google-cloud-nio "0.127.8"]
-                 [com.google.cloud/google-cloud-storage "2.30.1"]
-                 [org.clojure/tools.logging "1.2.4"]]
+  :dependencies [[org.clojure/clojure "1.11.3"]
+                 [com.oscaro/clj-gcloud-common "0.215-1.0"]
+                 [com.google.cloud/google-cloud-nio "0.127.14"]
+                 [com.google.cloud/google-cloud-storage "2.35.0"]
+                 [org.clojure/tools.logging "1.3.0"]]
   :profiles {:dev {:source-paths ["dev"]
-                   :dependencies [[org.clojure/tools.namespace "1.4.4"]]
+                   :dependencies [[org.clojure/tools.namespace "1.5.0"]]
                    :global-vars {*warn-on-reflection* true}}}
   :repl-options {:init-ns user})

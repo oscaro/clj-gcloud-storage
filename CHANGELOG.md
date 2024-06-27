@@ -6,6 +6,7 @@
 * PR #13 copy with preconditions by @rfb.
 
 ### Changed
+* Bumped dependencies bom 0.215.0 / 26.34.0.
 
 ### Fixed
 
