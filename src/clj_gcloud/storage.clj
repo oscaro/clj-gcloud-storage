@@ -113,10 +113,11 @@
               ;; See: https://cloud.google.com/storage/docs/copying-renaming-moving-objects#storage-copy-object-java
               (let [precondition (if-let [target (.get storage target-blob-id)]
                                    (Storage$BlobTargetOption/generationMatch (.getGeneration target))
-                                   (Storage$BlobTargetOption/doesNotExist))]
+                                   (Storage$BlobTargetOption/doesNotExist))
+                    ^Iterable target-opts (into-array Storage$BlobTargetOption [precondition])]
                 (-> (Storage$CopyRequest/newBuilder)
                     (.setSource source-blob-id)
-                    (.setTarget target-blob-id (into-array Storage$BlobTargetOption [precondition]))
+                    (.setTarget target-blob-id target-opts)
                     .build))
               (Storage$CopyRequest/of source-blob-id target-blob-id))]
      (-> (.copy storage cr)
