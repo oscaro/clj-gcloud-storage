@@ -105,9 +105,22 @@
     (.build builder)))
 
 (defn copy
-  [^Storage storage ^BlobId source-blob-id ^BlobId target-blob-id]
-  (-> (.copy storage (Storage$CopyRequest/of source-blob-id target-blob-id))
-      (.getResult)))
+  ([storage source-blob-id target-blob-id]
+   (copy storage source-blob-id target-blob-id nil))
+  ([^Storage storage ^BlobId source-blob-id ^BlobId target-blob-id options]
+   (let [cr (if (:with-precondition options)
+              ;; Copy blobs within cloud storage using preconditions recommended in Google Cloud Storage guides
+              ;; See: https://cloud.google.com/storage/docs/copying-renaming-moving-objects#storage-copy-object-java
+              (let [precondition (if-let [target (.get storage target-blob-id)]
+                                   (Storage$BlobTargetOption/generationMatch (.getGeneration target))
+                                   (Storage$BlobTargetOption/doesNotExist))]
+                (-> (Storage$CopyRequest/newBuilder)
+                    (.setSource source-blob-id)
+                    (.setTarget target-blob-id (into-array Storage$BlobTargetOption [precondition]))
+                    .build))
+              (Storage$CopyRequest/of source-blob-id target-blob-id))]
+     (-> (.copy storage cr)
+         (.getResult)))))
 
 (defn create-blob
   [^Storage storage ^BlobInfo blob-info]
@@ -208,20 +221,6 @@
 ;;
 ;; Convenience functions
 ;;
-
-(defn copy-with-generation-preconditions
-  "Copy blobs within cloud storage using preconditions recommended in Google Cloud Storage guides
-  See: https://cloud.google.com/storage/docs/copying-renaming-moving-objects#storage-copy-object-java"
-  [^Storage storage ^BlobId source-blob-id ^BlobId target-blob-id]
-  (let [precondition (if-let [target (.get storage target-blob-id)]
-                       (Storage$BlobTargetOption/generationMatch (.getGeneration target))
-                       (Storage$BlobTargetOption/doesNotExist))
-        builder (-> (Storage$CopyRequest/newBuilder)
-                    (.setSource source-blob-id)
-                    (.setTarget target-blob-id (into-array Storage$BlobTargetOption [precondition]))
-                    .build)]
-    (-> (.copy storage builder)
-        (.getResult))))
 
 (defn copy-file-to-storage
   "Convenience function for copying a local file to a blob to storage.

@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 ### Added
+* PR #13 copy with preconditions by @rfb.
 
 ### Changed
 
