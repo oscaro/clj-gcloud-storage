@@ -58,4 +58,3 @@
         (is (delete-blob *storage* (.getBlobId blob)))
         (is (= 0 (count (ls *storage* dest-uri)))))
       (.delete tmp))))
-

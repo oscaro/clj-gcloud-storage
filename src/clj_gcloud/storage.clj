@@ -243,5 +243,10 @@
    Usage :
    (download-file-from-storage storage-client 'gs://mybucket/myfolder/.../myfile' 'mylocalfile')"
   [^Storage storage source-gs-uri dest-local-path & _options]
-  (let [blob (->> source-gs-uri ->blob-id (get-blob storage))]
-    (.downloadTo blob (Paths/get dest-local-path (make-array String 0)) (into-array Blob$BlobSourceOption []))))
+  (let [^Blob blob (->> source-gs-uri ->blob-id (get-blob storage))
+        path (Paths/get dest-local-path (make-array String 0))
+        ;; this resolves reflection but it's pretty ugly:
+        ;; ^"[Lcom.google.cloud.storage.Blob$BlobSourceOption;" opts (into-array Blob$BlobSourceOption [])
+        ;; for now skip it, since we pass no options anyway
+        ]
+    (.downloadTo blob path)))
