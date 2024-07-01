@@ -1,0 +1,7 @@
+{:paths ["src" "resources"],
+ :deps
+ {org.clojure/clojure {:mvn/version "1.11.1"},
+  com.oscaro/clj-gcloud-common {:mvn/version "0.209-1.0"},
+  com.google.cloud/google-cloud-nio {:mvn/version "0.127.8"},
+  com.google.cloud/google-cloud-storage {:mvn/version "2.30.1"},
+  org.clojure/tools.logging {:mvn/version "1.2.4"}}}
