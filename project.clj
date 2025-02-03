@@ -1,4 +1,4 @@
-(defproject com.oscaro/clj-gcloud-storage "0.234-1.0"
+(defproject com.oscaro/clj-gcloud-storage "0.234-2.0-SNAPSHOT"
   :description "Clojure wrapper for google-cloud-storage Java client"
   :url "https://github.com/oscaro/clj-gcloud-storage"
   :license {:name "Eclipse Public License"
