@@ -126,7 +126,7 @@ the result to uris.
 
 ## License
 
-Copyright © 2017-2024 Oscaro
+Copyright © 2017-2025 Oscaro
 
 Distributed under the Eclipse Public License either version 1.0 or (at
 your option) any later version.
