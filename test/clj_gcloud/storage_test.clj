@@ -1,7 +1,7 @@
 (ns clj-gcloud.storage-test
   (:require
    [clj-gcloud.coerce :refer [->clj]]
-   [clj-gcloud.storage :refer [copy-file-to-storage read-channel ->input-stream delete-blob ls]]
+   [clj-gcloud.storage :as sut]
    [clojure.java.io :as io]
    [clojure.test :refer [deftest is use-fixtures testing]])
   (:import
@@ -32,8 +32,8 @@
           dest-uri  (str "gs://" bucket "/tmp.json")
           data      "{\"test\":\"data\"}"]
       (spit tmp data)
-      (copy-file-to-storage *storage* tmp dest-uri)
-      (let [^Blob blob (first (ls *storage* dest-uri))
+      (sut/copy-file-to-storage *storage* tmp dest-uri)
+      (let [^Blob blob (first (sut/ls *storage* dest-uri))
             coerced-blob (->clj blob)]
         (is (= {:blob-id      {:bucket bucket :name "tmp.json"}
                 :content-type "application/json"
@@ -51,10 +51,10 @@
                  :content-encoding
                  :delete-time}
                (set (keys coerced-blob))))
-        (is (= data (-> (read-channel blob)
-                        (->input-stream)
+        (is (= data (-> (sut/read-channel blob)
+                        (sut/->input-stream)
                         (io/reader)
                         (slurp))))
-        (is (delete-blob *storage* (.getBlobId blob)))
-        (is (= 0 (count (ls *storage* dest-uri)))))
+        (is (sut/delete-blob *storage* (.getBlobId blob)))
+        (is (= 0 (count (sut/ls *storage* dest-uri)))))
       (.delete tmp))))

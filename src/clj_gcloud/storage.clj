@@ -1,20 +1,22 @@
 (ns clj-gcloud.storage
-  (:require [clj-gcloud
-             [coerce :refer [create-clj-coerce ->clj page->seq]]
-             [common :refer [build-service array-type]]]
-            [clojure.java.io :as io]
-            [clojure.string :as str]
-            [clojure.tools.logging :as log])
-  (:import (com.google.cloud.storage BucketInfo Blob BlobId BlobInfo BucketInfo$Builder Storage StorageOptions
-                                     Storage$BucketGetOption Storage$BucketTargetOption
-                                     Storage$BucketSourceOption BlobInfo$Builder Storage$CopyRequest
-                                     Storage$BlobTargetOption Storage$BlobWriteOption
-                                     Blob$BlobSourceOption Storage$BlobListOption CopyWriter)
-           (java.nio.channels Channels ReadableByteChannel WritableByteChannel)
-           (java.nio.file Paths)
-           (java.io InputStream OutputStream FileInputStream File)
-           (com.google.cloud WriteChannel)
-           (com.google.common.io ByteStreams)))
+  (:require
+   [clj-gcloud
+    [coerce :refer [create-clj-coerce ->clj page->seq]]
+    [common :refer [build-service array-type]]]
+   [clojure.java.io :as io]
+   [clojure.string :as str]
+   [clojure.tools.logging :as log])
+  (:import
+   (com.google.cloud WriteChannel)
+   (com.google.cloud.storage BucketInfo Blob BlobId BlobInfo BucketInfo$Builder Storage StorageOptions
+                             Storage$BucketGetOption Storage$BucketTargetOption
+                             Storage$BucketSourceOption BlobInfo$Builder Storage$CopyRequest
+                             Storage$BlobTargetOption Storage$BlobWriteOption
+                             Blob$BlobSourceOption Storage$BlobListOption CopyWriter)
+   (com.google.common.io ByteStreams)
+   (java.io InputStream OutputStream FileInputStream File)
+   (java.nio.channels Channels ReadableByteChannel WritableByteChannel)
+   (java.nio.file Paths)))
 
 (create-clj-coerce BucketInfo [:name :location :storage-class])
 (create-clj-coerce Blob [:blob-id :name :content-type
@@ -58,10 +60,10 @@
     (.create storage bucket-info no-options)))
 
 (defn get-or-create-bucket
-  "Fetches or creates a bucket if it doesn't exist"
+  "Fetches or creates a bucket if it doesn't exist."
   [^Storage storage ^BucketInfo info]
   (let [bucket-name (.getName info)
-        bucket      (get-bucket storage bucket-name)]
+        bucket (get-bucket storage bucket-name)]
     (or bucket
         (do
           (log/info "Creating new bucket:" bucket-name)
@@ -172,7 +174,8 @@
     [bucket name]))
 
 (defn ls
-  "Usage:
+  "List files.
+  Usage:
      (ls storage gs-uri [options])
      (ls storage bucket path [options])"
   ([^Storage storage gs-uri]
@@ -210,12 +213,12 @@
   (Channels/newOutputStream channel))
 
 (defn stream->file
-  "Writes an input stream to disk"
+  "Writes an input stream to disk."
   [^InputStream input-stream local-path]
   (io/copy input-stream (io/file local-path)))
 
 (defn file->stream
-  "Writes an local file to stream"
+  "Writes an local file to stream."
   [local-path ^OutputStream output-stream]
   (io/copy (io/file local-path) output-stream))
 
