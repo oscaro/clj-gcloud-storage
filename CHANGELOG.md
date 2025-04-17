@@ -5,6 +5,7 @@
 ### Added
 
 ### Changed
+* Bumped bom to 0.240.0 / 26.59.0.
 
 ### Fixed
 

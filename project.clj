@@ -14,19 +14,19 @@
   ;; dependency versions that work well with each other.
   ;;
   ;; based on versions from
-  ;;   https://mvnrepository.com/artifact/com.google.cloud/google-cloud-bom/0.234.0
+  ;;   https://mvnrepository.com/artifact/com.google.cloud/google-cloud-bom/0.240.0
   ;; which corresponds to
-  ;;   https://mvnrepository.com/artifact/com.google.cloud/libraries-bom/26.53.0
-  [[com.google.cloud/google-cloud-bom "0.234.0"
+  ;;   https://mvnrepository.com/artifact/com.google.cloud/libraries-bom/26.59.0
+  [[com.google.cloud/google-cloud-bom "0.240.0"
     :extension "pom"
     :scope "import"]
-   [com.google.cloud/google-cloud-shared-dependencies "3.42.0"
+   [com.google.cloud/google-cloud-shared-dependencies "3.45.1"
     :extension "pom"
     :scope "import"]]
   :dependencies [[org.clojure/clojure "1.11.4"]
-                 [com.oscaro/clj-gcloud-common "0.234-1.0"]
-                 [com.google.cloud/google-cloud-nio "0.127.29"]
-                 [com.google.cloud/google-cloud-storage "2.47.0"]
+                 [com.oscaro/clj-gcloud-common "0.240-1.0"]
+                 [com.google.cloud/google-cloud-nio "0.127.33"]
+                 [com.google.cloud/google-cloud-storage "2.50.0"]
                  [org.clojure/tools.logging "1.3.0"]]
   :plugins [[io.github.borkdude/lein-lein2deps "0.1.0"]]
   :prep-tasks [["lein2deps" "--write-file" "deps.edn" "--print" "false"]]
