@@ -1,14 +1,8 @@
 # clj-gcloud-storage Changelog
 
-## [Unreleased]
-
-### Added
-
+## [0.240-1.0]
 ### Changed
 * Bumped bom to 0.240.0 / 26.59.0.
-
-### Fixed
-
 
 ## [0.234-1.0] - 2025-02-03
 ### Changed
@@ -69,7 +63,8 @@ Bumped google java libraries
 ## [0.71-1.2] - 2019-04-26
 First public release.
 
-[Unreleased]: https://github.com/oscaro/clj-gcloud-storage/-/compare/0.234-1.0...devel
+[Unreleased]: https://github.com/oscaro/clj-gcloud-storage/-/compare/0.240-1.0...devel
+[0.240-1.0]: https://github.com/oscaro/clj-gcloud-storage/-/compare/0.234-1.0...0.240-1.0
 [0.234-1.0]: https://github.com/oscaro/clj-gcloud-storage/-/compare/0.215-1.0...0.234-1.0
 [0.215-1.0]: https://github.com/oscaro/clj-gcloud-storage/-/compare/0.209-1.0...0.215-1.0
 [0.209-1.0]: https://github.com/oscaro/clj-gcloud-storage/-/compare/0.199-1.0...0.209-1.0
