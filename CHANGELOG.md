@@ -4,6 +4,9 @@
 
 ### Added
 
+- Implement .setMetadata on BlobInfo builder
+- Added convenience functions to work with custom metadatas
+
 ### Changed
 
 ### Fixed

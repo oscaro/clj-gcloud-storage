@@ -5,6 +5,7 @@
     [common :refer [build-service array-type]]]
    [clojure.java.io :as io]
    [clojure.string :as str]
+   [clojure.walk :refer [stringify-keys keywordize-keys]]
    [clojure.tools.logging :as log])
   (:import
    (com.google.cloud WriteChannel)
@@ -24,7 +25,8 @@
                          :content-disposition :content-encoding :content-language])
 (create-clj-coerce BlobId [:bucket :name])
 (create-clj-coerce BlobInfo [:blob-id :cache-control :create-time :update-time :delete-time
-                             :content-disposition :content-encoding :content-language :content-type])
+                             :content-disposition :content-encoding :content-language :content-type
+                             :metadata])
 
 (defn bucket-info
   [bucket-name options]
@@ -92,13 +94,17 @@
      gs-uri-or-blob-id
      (read-gs-uri gs-uri-or-blob-id))))
 
+(defn ->metadata  [m]
+  (some-> m (stringify-keys) (update-vals name)))
+
 (defn blob-info
   [blob-id options]
   (let [opt-map {:cache-control       (fn [^BlobInfo$Builder b v] (.setCacheControl b v))
                  :content-disposition (fn [^BlobInfo$Builder b v] (.setContentDisposition b v))
                  :content-encoding    (fn [^BlobInfo$Builder b v] (.setContentEncoding b v))
                  :content-language    (fn [^BlobInfo$Builder b v] (.setContentLanguage b v))
-                 :content-type        (fn [^BlobInfo$Builder b v] (.setContentType b v))}
+                 :content-type        (fn [^BlobInfo$Builder b v] (.setContentType b v))
+                 :metadata            (fn [^BlobInfo$Builder b v] (.setMetadata b (->metadata v)))}
         builder (BlobInfo/newBuilder blob-id)]
     (doseq [[k v] options
             :let [set-fn (get opt-map k)]
@@ -253,3 +259,47 @@
         ;; for now skip it, since we pass no options anyway
         ]
     (.downloadTo blob path)))
+
+(defn set-metadata!
+  "Set custom metadata to an existing blob in a bucket
+
+   CAUTION: If no `metadata` arg specified, the field will be nulled and all
+   the custom metadata will be removed from the Blob
+
+   Usage:
+
+   ;; Clean Metadata
+   (set-metadata! storage-client \"gs://foo/bar/file.clj\")
+
+   ;; Attach metadata
+   (set-metadata! storage-client \"gs://foo/bar/file.clj\" {:instance \"instance-foobar-1-cloud-vm\")"
+  {:added "0.240-2.0"}
+  ([^Storage storage source-gs-uri]
+   (set-metadata! storage source-gs-uri nil))
+  ([^Storage storage source-gs-uri metadata]
+   (when-let [^Blob blob (->> source-gs-uri ->blob-id (get-blob storage))]
+     ;; Set a generation-match precondition to avoid potential race
+     ;; conditions and data corruptions.
+     ;;
+     ;; NOTE: The request to upload returns a 412 error if
+     ;; the object's generation number does not match your precondition.
+     (let [pre-cond (Storage$BlobTargetOption/generationMatch)]
+       (some->
+        (.toBuilder blob)
+        (.setMetadata (->metadata metadata))
+        (.build)
+        (.update (into-array Storage$BlobTargetOption [pre-cond])))
+
+       true))))
+
+(defn get-metadata
+  "Retrieve the custom metadata associated to the current
+   google storage blob.
+
+   Options: `:keywordize?` (default: `false`) - keywordize return"
+  {:added "0.240-2.0"}
+  [^Storage storage source-gs-uri & {:keys [keywordize?] :or {keywordize? false}}]
+  (when-let [^Blob blob (->> source-gs-uri ->blob-id (get-blob storage))]
+    (when-let [metadata? (.getMetadata blob)]
+      (cond->> (into {} metadata?)
+        keywordize? keywordize-keys))))
