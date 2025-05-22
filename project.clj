@@ -11,7 +11,7 @@
                                       :username :env/clojars_username
                                       :password :env/clojars_password
                                       :sign-releases true}]]
-  :signing {:gpg-key "github-ci@oscaro.com"}
+  :signing {:gpg-key "github-cicd@oscaro.com"}
   :managed-dependencies
   ;; Google “Bill of Materials” (BOM) defines a combination of
   ;; dependency versions that work well with each other.
