@@ -46,10 +46,10 @@ jobs:
 
       - name: Import GPG Key
         if: github.ref == 'refs/heads/devel' || github.ref == 'refs/heads/master'
-        run: echo -n "::add-mask::$KEY" | base64 --decode | gpg --import --pinentry-mode=loopback --passphrase "::add-mask::$PASS"
+        run: echo -n "::add-mask::$GPG_KEY" | base64 --decode | gpg --import --pinentry-mode=loopback --passphrase "::add-mask::$GPG_PASS"
         env:
-          KEY: ${{ secrets.CLOJARS_SIGN_GPG_PRIVATE_KEY }}
-          PASS: ${{ secrets.CLOJARS_SIGN_GPG_PRIVATE_KEY_PASSPHRASE }}
+          GPG_KEY: ${{ secrets.CLOJARS_SIGN_GPG_PRIVATE_KEY }}
+          GPG_PASS: ${{ secrets.CLOJARS_SIGN_GPG_PRIVATE_KEY_PASSPHRASE }}
 
       - name: Deploy snapshots
         if: github.ref == 'refs/heads/devel' || github.ref == 'refs/heads/master'
