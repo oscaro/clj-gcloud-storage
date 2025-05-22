@@ -44,8 +44,14 @@ jobs:
       - name: Run tests
         run: lein test
 
+      - name: Import GPG Key
+        if: github.ref == 'refs/heads/devel' || github.ref == 'refs/heads/master'
+        run: echo -n "$CLOJARS_SIGN_GPG_PRIVATE_KEY" | base64 --decode | gpg --import
+        env:
+          GPG_SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY }}
+
       - name: Deploy snapshots
-        if: github.ref == 'refs/heads/devel'
+        if: github.ref == 'refs/heads/devel' || github.ref == 'refs/heads/master'
         run: lein deploy
         env:
           CLOJARS_USERNAME: ${{ secrets.CLOJARS_USERNAME }}
