@@ -45,6 +45,7 @@ jobs:
         run: lein test
 
       - name: Import GPG key
+        if: github.ref == 'refs/heads/devel' || github.ref == 'refs/heads/master'
         run: |
           echo -n "$GPG_KEY" | base64 --decode | gpg --import --pinentry-mode=loopback --passphrase "$GPG_PASSPHRASE"
         env:
@@ -52,6 +53,7 @@ jobs:
           GPG_PASSPHRASE: ${{ secrets.CLOJARS_SIGN_GPG_PRIVATE_KEY_PASSPHRASE }}
 
       - name: Set up GPG Environnement
+        if: github.ref == 'refs/heads/devel' || github.ref == 'refs/heads/master'
         run: |
           echo "no-tty" >> ~/.gnupg/gpg.conf
           echo "batch" >> ~/.gnupg/gpg.conf
