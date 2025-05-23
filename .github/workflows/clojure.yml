@@ -44,6 +44,13 @@ jobs:
       - name: Run tests
         run: lein test
 
+      - name: Set up GPG agent
+        run: |
+          echo "allow-loopback-pinentry" >> ~/.gnupg/gpg-agent.conf
+          echo "use-agent" >> ~/.gnupg/gpg.conf
+          gpgconf --kill gpg-agent
+          gpgconf --launch gpg-agent
+
       - name: Sign Jars & Deploy to Clojars
         if: github.ref == 'refs/heads/devel' || github.ref == 'refs/heads/master'
         run: |
