@@ -44,21 +44,15 @@ jobs:
       - name: Run tests
         run: lein test
 
-      - name: Import GPG Key
-        if: github.ref == 'refs/heads/devel' || github.ref == 'refs/heads/master'
-        run: |
-          echo -n "$GPG_KEY" | base64 --decode | gpg --import --pinentry-mode=loopback --passphrase "$GPG_PASS"
-        env:
-          GPG_KEY: ${{ secrets.CLOJARS_SIGN_GPG_PRIVATE_KEY }}
-          GPG_PASS: ${{ secrets.CLOJARS_SIGN_GPG_PRIVATE_KEY_PASSPHRASE }}
-
-      - name: Deploy to Clojars
+      - name: Sign Jars & Deploy to Clojars
         if: github.ref == 'refs/heads/devel' || github.ref == 'refs/heads/master'
         run: |
           export GPG_TTY=$(tty)
           echo RELOADAGENT | gpg-connect-agent
+          echo -n "$GPG_KEY" | base64 --decode | gpg --import --pinentry-mode=loopback --passphrase "$GPG_PASSPHRASE"
           lein deploy
         env:
+          GPG_KEY: ${{ secrets.CLOJARS_SIGN_GPG_PRIVATE_KEY }}
           GPG_PASSPHRASE: ${{ secrets.CLOJARS_SIGN_GPG_PRIVATE_KEY_PASSPHRASE }}
           CLOJARS_USERNAME: ${{ secrets.CLOJARS_USERNAME }}
           CLOJARS_PASSWORD: ${{ secrets.CLOJARS_PASSWORD }}
