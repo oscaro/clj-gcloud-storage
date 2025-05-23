@@ -44,13 +44,15 @@ jobs:
       - name: Run tests
         run: lein test
 
-      - name: Set up GPG agent
+      - name: Set up GPG agent & Keys
         run: |
-          mkdir -p $HOME/.gnupg/
+          mkdir -p ~/.gnupg/
+          chmod -R 700 ~/.gnupg
           echo "allow-loopback-pinentry" >> ~/.gnupg/gpg-agent.conf
-          echo "use-agent" >> ~/.gnupg/gpg.conf
           gpgconf --kill gpg-agent
           gpgconf --launch gpg-agent
+          export GPG_TTY=$(tty)
+          echo RELOADAGENT | gpg-connect-agent
 
       - name: Sign Jars & Deploy to Clojars
         if: github.ref == 'refs/heads/devel' || github.ref == 'refs/heads/master'
@@ -60,6 +62,7 @@ jobs:
           echo -n "$GPG_KEY" | base64 --decode | gpg --import --pinentry-mode=loopback --passphrase "$GPG_PASSPHRASE"
           lein deploy
         env:
+          GPG_TTY: ${{ env.GPG_TTY }}
           GPG_KEY: ${{ secrets.CLOJARS_SIGN_GPG_PRIVATE_KEY }}
           GPG_PASSPHRASE: ${{ secrets.CLOJARS_SIGN_GPG_PRIVATE_KEY_PASSPHRASE }}
           CLOJARS_USERNAME: ${{ secrets.CLOJARS_USERNAME }}
