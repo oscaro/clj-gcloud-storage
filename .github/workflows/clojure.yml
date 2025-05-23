@@ -46,7 +46,7 @@ jobs:
 
       - name: Set up GPG agent
         run: |
-          mkdip -p $HOME/.gnupg/
+          mkdir -p $HOME/.gnupg/
           echo "allow-loopback-pinentry" >> ~/.gnupg/gpg-agent.conf
           echo "use-agent" >> ~/.gnupg/gpg.conf
           gpgconf --kill gpg-agent
