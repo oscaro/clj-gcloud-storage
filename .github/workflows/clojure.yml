@@ -17,7 +17,7 @@ jobs:
           java-version: 8
 
       - name: Install clojure tools
-        uses: DeLaGuardo/setup-clojure@13.2
+        uses: DeLaGuardo/setup-clojure@13.4
         with:
           # Install just one or all simultaneously
           # The value must indicate a particular version of the tool, or use 'latest'
@@ -44,9 +44,32 @@ jobs:
       - name: Run tests
         run: lein test
 
-      - name: Deploy snapshots
-        if: github.ref == 'refs/heads/devel'
-        run: lein deploy
+      - name: Import GPG key
+        if: github.ref == 'refs/heads/devel' || github.ref == 'refs/heads/master'
+        run: |
+          echo -n "$GPG_KEY" | base64 --decode | gpg --import --pinentry-mode=loopback --passphrase "$GPG_PASSPHRASE"
         env:
+          GPG_KEY: ${{ secrets.CLOJARS_SIGN_GPG_PRIVATE_KEY }}
+          GPG_PASSPHRASE: ${{ secrets.CLOJARS_SIGN_GPG_PRIVATE_KEY_PASSPHRASE }}
+
+      - name: Set up GPG Environnement
+        if: github.ref == 'refs/heads/devel' || github.ref == 'refs/heads/master'
+        run: |
+          echo "no-tty" >> ~/.gnupg/gpg.conf
+          echo "batch" >> ~/.gnupg/gpg.conf
+          echo pinentry-mode loopback >> ~/.gnupg/gpg.conf
+          echo "allow-loopback-pinentry" >> ~/.gnupg/gpg-agent.conf
+          echo RELOADAGENT | gpg-connect-agent
+        shell: bash
+
+      - name: Sign Jars & Deploy to Clojars
+        if: github.ref == 'refs/heads/devel' || github.ref == 'refs/heads/master'
+        run: |
+          export GPG_TTY=$(tty)
+          echo "logging" | gpg --sign --passphrase "$GPG_PASSPHRASE" -o /dev/null
+          lein deploy
+        env:
+          GPG_KEY: ${{ secrets.CLOJARS_SIGN_GPG_PRIVATE_KEY }}
+          GPG_PASSPHRASE: ${{ secrets.CLOJARS_SIGN_GPG_PRIVATE_KEY_PASSPHRASE }}
           CLOJARS_USERNAME: ${{ secrets.CLOJARS_USERNAME }}
           CLOJARS_PASSWORD: ${{ secrets.CLOJARS_PASSWORD }}
