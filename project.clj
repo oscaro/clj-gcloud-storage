@@ -1,4 +1,4 @@
-(defproject com.oscaro/clj-gcloud-storage "0.240-4.0-SNAPSHOT"
+(defproject com.oscaro/clj-gcloud-storage "0.251-1.0-SNAPSHOT"
   :description "Clojure wrapper for google-cloud-storage Java client"
   :url "https://github.com/oscaro/clj-gcloud-storage"
   :license {:name "Eclipse Public License"
@@ -19,9 +19,9 @@
   ;; which corresponds to
   ;;   https://mvnrepository.com/artifact/com.google.cloud/lib
   :dependencies [[org.clojure/clojure "1.11.4"]
-                 [com.oscaro/clj-gcloud-common "0.240-1.0"]
-                 [com.google.cloud/google-cloud-nio "0.127.33"]
-                 [com.google.cloud/google-cloud-storage "2.50.0"]
+                 [com.oscaro/clj-gcloud-common "0.251-1.0"]
+                 [com.google.cloud/google-cloud-nio "0.128.7"]
+                 [com.google.cloud/google-cloud-storage "2.59.0"]
                  [org.clojure/tools.logging "1.3.0"]]
   :plugins [[io.github.borkdude/lein-lein2deps "0.1.0"]]
   :prep-tasks [["lein2deps" "--write-file" "deps.edn" "--print" "false"]]
