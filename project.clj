@@ -1,4 +1,4 @@
-(defproject com.oscaro/clj-gcloud-storage "0.251-1.0"
+(defproject com.oscaro/clj-gcloud-storage "0.251-2.0"
   :description "Clojure wrapper for google-cloud-storage Java client"
   :url "https://github.com/oscaro/clj-gcloud-storage"
   :license {:name "Eclipse Public License"
@@ -12,7 +12,7 @@
                                       :password :env/clojars_password
                                       :sign-releases true}]]
   :signing {:gpg-key "github-cicd@oscaro.com"}
-  :parent-project [:coords [com.oscaro/clj-gcloud-common "0.240-1.0"]
+  :parent-project [:coords [com.oscaro/clj-gcloud-common "0.251-1.0"]
                    :inherit [:managed-dependencies]]
   ;; based on versions from
   ;;   https://mvnrepository.com/artifact/com.google.cloud/google-cloud-bom/0.240.0
