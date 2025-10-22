@@ -11,6 +11,9 @@
 
 ### Fixed
 
+## [0.251-1.0]
+### Changed
+* Bumped bom to 0.251.0
 
 ## [0.240-1.0]
 ### Changed
